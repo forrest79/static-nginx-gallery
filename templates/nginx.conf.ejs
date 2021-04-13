@@ -1,0 +1,85 @@
+<% if (redirectHttpToHttps) { %>
+
+# http to https
+
+server {
+	server_name <%= serverName %>;
+
+	listen <%= redirectPortFromHttp %>;
+
+	#include /etc/nginx/snippets/letsencrypt.conf;
+
+	location /<%= path %>/ {
+		return 301 https://$host$request_uri;
+	}
+}
+
+
+<% } %>
+server {
+	server_name <%= serverName %>;
+<% if (ssl) { %>
+
+	############################################
+	# ssl
+
+	listen <%= port %> ssl http2;
+
+	ssl_certificate     <%= sslCertificate %>;
+	ssl_certificate_key <%= sslCertificateKey %>;
+
+	ssl_session_timeout 1d;
+	ssl_session_cache shared:SSL:10m;
+	ssl_session_tickets off;
+
+	ssl_protocols TLSv1.2 TLSv1.3;
+	ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+	ssl_prefer_server_ciphers off;
+
+	add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+	ssl_stapling on;
+	ssl_stapling_verify on;
+<% } else { %>
+	listen <%= port %>;
+<% } %>
+
+	charset utf-8;
+
+	location /favicon.ico {
+		log_not_found off;
+	}
+
+	location /robots.txt {
+		log_not_found off;
+	}
+
+	############################################
+	# remove trailing dot from host
+
+	if ($http_host ~ \.$) {
+		return 301 $scheme://$host$request_uri;
+	}
+
+	location /<%= path %>/ {
+		alias <%= rootDir %>/;
+
+		autoindex on;
+		autoindex_format xml;
+		xslt_string_param uri $request_uri;
+		xslt_stylesheet <%= outputDir %>/nginx-static-gallery.xslt;
+		try_files $uri $uri/ =404;
+	}
+
+	location = /<%= path %>/@<%= cssSha1 %>.css {
+		expires 365d;
+		add_header Content-Type text/css;
+		return 200 '<%- css %>';
+	}
+
+	location = /<%= path %>/@<%= jsSha1 %>.js {
+		expires 365d;
+		add_header Content-Type text/javascript;
+		return 200 '<%- js %>';
+	}
+}
