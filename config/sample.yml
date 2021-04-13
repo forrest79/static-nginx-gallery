@@ -1,29 +1,22 @@
-outputDir: /etc/nginx/sites-available/
-rootDir: /var/www/gallery
-host: example.test
-path: '' # name
-port: default # 80 for HTTP, 443 for HTTPS
-thumbnails: false # or string with cache directory
+# = required =
+nginxConfDir: /etc/nginx/sites-available/
+nginxAppDir: /etc/nginx/apps/static-nginx-gallery/
+serverName: gallery.test
+galleryDir: /var/www/gallery
+
+# = optional =
+path: null # /path/
+port: null # null = use default - 80 for HTTP, 443 for HTTPS
+thumbnails: false # bool - yes/no or string with cache directory
+lightTheme: false # bool - yes/no
+title: 'Gallery' # <h1> and <title>
+favicon: false # or string with a path to custom favicon (in PNG format)
+subtitles:
+  convertSrtToVtt: false
 ssl: false
-  #redirectFromHttpPort: 80 # false
-  #sslCertificate:
-  #sslCertificateKey:
-  #letsEncryptSnippet: false
-httpAuth: false
-  #file:
-  #token: false
-
-#css - sass
-#js - modules rollup
-
-#photo
-#+360
-#video+vtt
-#other
-
-#download <a download="" ...>
-#show
-#share
-#exif-map
-
-#favicon
+  #sslCertificate: '' # required if ssl is set
+  #sslCertificateKey: '' # required if ssl is set
+  #redirectHttpToHttps: true # bool - yes/no
+  #httpPort: 80 # HTTP port to redirect to HTTPS or for Let's encrypt (if Let's encrypt is used, must be 80)
+  #letsEncrypt: false # or string with a path to directory to store ACME challenge
+httpAuth: false # or string with htpasswd auth file

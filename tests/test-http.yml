@@ -1,0 +1,4 @@
+nginxConfDir: /etc/nginx/sites-available/
+nginxAppDir: /etc/nginx/apps/static-nginx-gallery/
+serverName: gallery.test
+galleryDir: /var/www/static-nginx-gallery/example

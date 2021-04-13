@@ -1,0 +1,60 @@
+#!/bin/bash
+
+if [[ "$EUID" -ne 0 ]]; then
+  echo "Please run as root or with sudo"
+  exit
+fi
+
+GREEN='\033[0;32m'
+LIGHT_RED='\033[1;31m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+prepare_test() {
+  printf "${YELLOW}Preparing '%s' ... ${NC}" "$1";
+
+  "${0%/*}/../bin/build" "${0%/*}/$1" --debug && service nginx reload && printf "${YELLOW}DONE\n\n${LIGHT_RED}Actual config:\n--------------${NC}\n" && cat "${0%/*}/$1" && printf "\n\n";
+
+  printf "\n${CYAN}Press any key to prepare next test...${NC}\n\n";
+
+  read -n 1 -s -r;
+}
+
+# HTTPS version
+
+prepare_test "test-simple.yml";
+
+prepare_test "test-light-theme.yml";
+
+prepare_test "test-title.yml";
+
+prepare_test "test-favicon.yml";
+
+prepare_test "test-thumbnails.yml";
+
+prepare_test "test-thumbnails-cache.yml";
+
+prepare_test "test-subtitles.yml";
+
+prepare_test "test-all.yml";
+
+prepare_test "test-all-path.yml";
+
+prepare_test "test-httpauth.yml";
+
+prepare_test "test-https-port.yml";
+
+prepare_test "test-https-noredirect.yml";
+
+prepare_test "test-https-httpport.yml";
+
+prepare_test "test-https-letsencrypt.yml";
+
+# HTTP version
+
+prepare_test "test-http.yml";
+
+prepare_test "test-http-port.yml";
+
+printf "${GREEN}All tests were processed${NC}...\n";
