@@ -8,8 +8,8 @@ server {
 	listen <%= sslHttpPort %>;
 
 <% if (sslLetsEncrypt) { %>
-	location /.well-known/acme-challenge/ {
-		root <%= sslLetsEncrypt %>;
+	location ^~ /.well-known/acme-challenge/ {
+		alias <%= sslLetsEncrypt %>;
 		default_type text/plain;
 		access_log off;
 		log_not_found off;
