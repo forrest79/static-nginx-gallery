@@ -10,10 +10,13 @@ import rollupCommonJS from '@rollup/plugin-commonjs';
 import { babel } from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import sass from 'node-sass';
+import { fileURLToPath } from 'url';
+import * as path from 'path';
 import defaultConfig from './defaultConfig.mjs';
 
 // Helpers
 
+const srcDir = path.dirname(fileURLToPath(import.meta.url));
 const sha1 = (data) => crypto.createHash('sha1').update(data).digest('hex');
 
 // Prepare build options
@@ -174,16 +177,15 @@ try {
 }
 
 // Compile CSS
-
 const renderedCss = sass.renderSync({
-	file: './src/sass/main.scss',
+	file: path.join(srcDir, 'sass/main.scss'),
 	outputStyle: debugMode ? 'expanded' : 'compressed',
 }).css.toString().trim();
 
 // Compile JS
 
 const bundle = await rollup.rollup({
-	input: './src/js/main.js',
+	input: path.join(srcDir, 'js/main.js'),
 	plugins: [
 		rollupReplace({
 			'process.env.NODE_ENV': JSON.stringify(debugMode ? 'development' : 'production'),
@@ -221,10 +223,10 @@ const renderedJs = output[0].code.trim();
 config.cssSha1 = sha1(renderedCss);
 config.jsSha1 = sha1(renderedJs);
 
-const nginxTemplate = fs.readFileSync('./src/templates/conf.ejs', 'utf8');
+const nginxTemplate = fs.readFileSync(path.join(srcDir, 'templates/conf.ejs'), 'utf8');
 const renderedNginxTemplate = ejs.render(nginxTemplate, config);
 
-const xsltTemplate = fs.readFileSync('./src/templates/xslt.ejs', 'utf8');
+const xsltTemplate = fs.readFileSync(path.join(srcDir, 'templates/xslt.ejs'), 'utf8');
 const renderedXsltTemplate = ejs.render(xsltTemplate, config);
 
 fs.writeFileSync(config.nginxConfDir + '/static-nginx-gallery', renderedNginxTemplate);
