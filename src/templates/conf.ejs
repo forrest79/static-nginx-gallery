@@ -84,6 +84,16 @@ server {
 	}
 
 	############################################
+	# gzip
+
+	gzip on;
+	gzip_vary on;
+	gzip_min_length 1024;
+	gzip_comp_level 5;
+	gzip_proxied expired no-cache no-store private auth;
+	gzip_types text/html text/plain text/css text/javascript application/javascript application/x-javascript;
+
+	############################################
 	# gallery
 
 	location <%= path %>/ {
