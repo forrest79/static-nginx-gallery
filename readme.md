@@ -91,15 +91,15 @@ In most cases, you want to run your gallery on HTTPS protocol. You can also use 
 
 ```yaml
 ssl:
-  sslCertificate: '/etc/letsencrypt/certs/gallery.test/fullchain.pem' # required if ssl is set
-  sslCertificateKey: '/etc/letsencrypt/certs/gallery,test/privkey.pem' # required if ssl is set
+  certificate: '/etc/letsencrypt/certs/gallery.test/fullchain.pem' # required if ssl is set
+  certificateKey: '/etc/letsencrypt/certs/gallery.test/privkey.pem' # required if ssl is set
   redirectHttpToHttps: true # bool - yes/no
   httpPort: 80 # HTTP port to redirect to HTTPS or for Let's encrypt (if Let's encrypt is used, must be 80)
   letsEncrypt: false # or string with a path to directory to store ACME challenge
 ```
 
-- `sslCertificate` - path to SSL certificate, required
-- `sslCertificateKey` - path to SSL certificate key, required
+- `certificate` - path to SSL certificate, required
+- `certificateKey` - path to SSL certificate key, required
 - `redirectHttpToHttps` - by default, for HTTPS is also generated a HTTP block, that just redirect HTTP to HTTPS. If you don't need this, set config to `false`
 - `httpPort` - belongs to the previous config, set port for HTTP block for redirect, default is `80`. If you use Let's encrypt config, you must keep it to `80`.
 - `letsEncrypt` - when `string` path is provided, to HTTP block is generated snippet to enable auto generating Let's encrypt certificates. You also need some tool to generate certificates, for example [dehyhrated](https://dehydrated.io/). Before first certificate is generated, you must comment SSL certificate and SSL certificate key lines.

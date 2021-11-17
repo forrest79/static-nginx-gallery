@@ -14,8 +14,8 @@ favicon: false # or string with a path to custom favicon (in PNG format)
 subtitles:
   convertSrtToVtt: false
 ssl: false
-  #sslCertificate: '' # required if ssl is set
-  #sslCertificateKey: '' # required if ssl is set
+  #certificate: '' # required if ssl is set
+  #certificateKey: '' # required if ssl is set
   #redirectHttpToHttps: true # bool - yes/no
   #httpPort: 80 # HTTP port to redirect to HTTPS or for Let's encrypt (if Let's encrypt is used, must be 80)
   #letsEncrypt: false # or string with a path to directory to store ACME challenge
