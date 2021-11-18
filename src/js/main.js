@@ -59,9 +59,9 @@ const customLightboxHTML = `
 				<a id="sng-exif" class="sng-button hidden" tabindex="9" aria-label="Show exif info">${exifSvg}</a>
 				<a id="sng-map" class="sng-button hidden" tabindex="8" aria-label="Show on map">${mapSvg}</a>
 				<a id="sng-photo360" class="sng-button hidden" tabindex="7" aria-label="Show photoshere">${photo360Svg}</a>
-				<a id="sng-share" class="sng-button" tabindex="6"" data-position="3" aria-label="Share">${shareSvg}</a>
-				<a id="sng-open" class="sng-button" tabindex="5"" data-position="2" aria-label="Open original in new tab" target="_blank">${openSvg}</a>
-				<a id="sng-download" class="sng-button" tabindex="4" data-position="1" aria-label="Download" download>${downloadSvg}</a>
+				<a id="sng-share" class="sng-button" tabindex="6" data-position="4" aria-label="Share">${shareSvg}</a>
+				<a id="sng-open" class="sng-button" tabindex="5" data-position="3" aria-label="Open original in new tab" target="_blank">${openSvg}</a>
+				<a id="sng-download" class="sng-button" tabindex="4" data-position="2" aria-label="Download" download>${downloadSvg}</a>
 				<a id="sng-copy" class="sng-button" tabindex="3" data-position="1" aria-label="Copy URL to clipboard" download>${copySvg}</a>
 			</div>
     		<button class="gclose gbtn" tabindex="2" aria-label="Close">${closeSvg}</button>
