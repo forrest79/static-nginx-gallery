@@ -1,7 +1,7 @@
 import GLightbox from 'glightbox';
 import { Viewer } from 'photo-sphere-viewer';
 import tippy from 'tippy.js';
-import shareon from '../../node_modules/shareon/dist/noinit/shareon';
+import { init as shareon } from '../../node_modules/shareon/dist/shareon.es';
 import exifr from '../../node_modules/exifr/dist/lite.esm';
 
 const exifSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
