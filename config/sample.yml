@@ -8,6 +8,7 @@ galleryDir: /var/www/gallery
 path: null # /path/
 port: null # null = use default - 80 for HTTP, 443 for HTTPS
 thumbnails: false # bool - yes/no or string with cache directory
+videoThumbnails: false # or string with cache directory
 lightTheme: false # bool - yes/no
 title: 'Gallery' # <h1> and <title>
 favicon: false # or string with a path to custom favicon (in PNG format)

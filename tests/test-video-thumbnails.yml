@@ -1,11 +1,8 @@
-nginxConfDir: /etc/nginx/sites-available
-nginxAppDir: /etc/nginx/apps/static-nginx-gallery
+nginxConfDir: /etc/nginx/sites-available/
+nginxAppDir: /etc/nginx/apps/static-nginx-gallery/
 serverName: gallery.test
 galleryDir: /var/www/static-nginx-gallery/example
-thumbnails: /etc/nginx/apps/static-nginx-gallery/cache
 videoThumbnails: /etc/nginx/apps/static-nginx-gallery/cache
-subtitles:
-  convertSrtToVtt: true
 ssl:
   certificate: /var/www/static-nginx-gallery/ssl/gallery.test.crt
   certificateKey: /var/www/static-nginx-gallery/ssl/gallery.test.key

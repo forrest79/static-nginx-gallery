@@ -152,7 +152,7 @@ server {
 			return 404;
 		}
 
-		proxy_pass         http://127.0.0.1:8080/image_resize/${image_original_uri}?w=<%= imageFilterResizeWidth %>&h=<%= imageFilterResizeHeight %>;
+		proxy_pass         http://127.0.0.1:8080/image_resize/${image_original_uri}?w=<%= thumbnailsResizeWidth %>&h=<%= thumbnailsResizeHeight %>;
 		proxy_store        <%= thumbnails %>/thumbnails/${image_original_uri};
 		proxy_store_access user:rw  group:rw  all:rw;
 		proxy_temp_path    <%= nginxAppDir %>/temp;
@@ -170,12 +170,41 @@ server {
 		add_header Pragma public;
 		add_header Cache-Control 'public';
 
-		image_filter resize <%= imageFilterResizeWidth %> <%= imageFilterResizeHeight %>;
+		image_filter resize <%= thumbnailsResizeWidth %> <%= thumbnailsResizeHeight %>;
 		image_filter_buffer <%= imageFilterBuffer %>;
-		image_filter_jpeg_quality <%= image_filter_jpeg_quality %>;
-		image_filter_webp_quality <%= image_filter_webp_quality %>;
+		image_filter_jpeg_quality <%= imageFilterJpegQuality %>;
+		image_filter_webp_quality <%= imageFilterWebpQuality %>;
 		image_filter_transparency on;
-		image_filter_sharpen <%= image_filter_sharpen %>;
+		image_filter_sharpen <%= imageFilterSharpen %>;
+	}
+<% } %>
+<% if (typeof videoThumbnails === 'string') { %>
+
+	############################################
+	# cached video thumbnails
+
+	location <%= path %>/cache/video-thumbnails {
+		alias <%= videoThumbnails %>/video-thumbnails;
+
+		expires 1d;
+		add_header Pragma public;
+		add_header Cache-Control 'public';
+
+		try_files $uri @videoProxy;
+	}
+
+	location @videoProxy {
+		internal;
+
+		if (!-f <%= galleryDir %>/${video_original_uri}) {
+			return 404;
+		}
+
+		proxy_pass         http://127.0.0.1:8080/video_thumbnail/${video_original_uri}?w=<%= thumbnailsResizeWidth %>&h=<%= thumbnailsResizeHeight %>;
+		proxy_store        <%= videoThumbnails %>/video-thumbnails/${video_original_uri}.jpg;
+		proxy_store_access user:rw  group:rw  all:rw;
+		proxy_temp_path    <%= nginxAppDir %>/temp;
+		proxy_set_header   Host $host;
 	}
 <% } %>
 <% if (subtitlesConvertSrtToVtt) { %>
@@ -220,26 +249,57 @@ server {
 	}
 <% } %>
 }
-<% if (typeof thumbnails === 'string') { %>
+<% if ((typeof thumbnails === 'string') || (typeof videoThumbnails === 'string')) { %>
 
 server {
 	listen 127.0.0.1:8080;
+	<% if (typeof thumbnails === 'string') { %>
 
 	location /image_resize {
 		alias <%= galleryDir %>;
 
 		image_filter resize $arg_w $arg_h;
 		image_filter_buffer <%= imageFilterBuffer %>;
-		image_filter_jpeg_quality <%= image_filter_jpeg_quality %>;
-		image_filter_webp_quality <%= image_filter_webp_quality %>;
+		image_filter_jpeg_quality <%= imageFilterJpegQuality %>;
+		image_filter_webp_quality <%= imageFilterWebpQuality %>;
 		image_filter_transparency on;
-		image_filter_sharpen <%= image_filter_sharpen %>;
+		image_filter_sharpen <%= imageFilterSharpen %>;
 	}
+	<% } %>
+	<% if (typeof videoThumbnails === 'string') { %>
+
+	location /video_thumbnail {
+		content_by_lua_block {
+			-- ffmpeg -i input.mp4 -vf "thumbnail,scale=w=320:h=240:force_original_aspect_ratio=increase" -frames:v 1 -f image2pipe -
+			-- sub 17 is to strip location prefix from file name
+			-- for ffmpeg debug remove '2>/dev/null' and check nginx error log
+			local ffmpeg = io.popen('ffmpeg -i <%= galleryDir %>' .. string.sub(ngx.var.uri, 17) .. ' -vf "thumbnail,scale=w=' .. ngx.var.arg_w .. ':h=' .. ngx.var.arg_h .. ':force_original_aspect_ratio=increase" -frames:v 1 -f image2pipe - 2>/dev/null')
+			local thumbnail = ffmpeg:read('*a')
+			ffmpeg:close()
+
+			if string.len(thumbnail) < 10 then -- probably thumbnail generation failed
+				-- black 1x1 JPEG
+				thumbnail = string.char(255,216,255,224,0,16,74,70,73,70,0,1,1,0,0,1,0,1,0,0) .. string.char(255,219,0,67,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1) .. string.char(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1) .. string.char(1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,3) .. string.char(3,3,3,3,3,3,3,3,3,255,219,0,67,1,1,1,1,1,1,1) .. string.char(1,1,1,1,2,2,1,2,2,3,3,3,3,3,3,3,3,3,3,3) .. string.char(3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3) .. string.char(3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,255,192) .. string.char(0,17,8,0,1,0,1,3,1,17,0,2,17,1,3,17,1,255,196,0) .. string.char(20,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,255) .. string.char(196,0,20,16,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0) .. string.char(0,255,196,0,20,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0) .. string.char(0,0,0,255,196,0,20,17,1,0,0,0,0,0,0,0,0,0,0,0) .. string.char(0,0,0,0,0,255,218,0,12,3,1,0,2,17,3,17,0,63,0,63) .. string.char(240,127,255,217)
+			end
+
+			ngx.header.content_type = 'image/jpeg'
+			ngx.say(thumbnail);
+		}
+	}
+	<% } %>
 }
+	<% if (typeof thumbnails === 'string') { %>
 
 map $uri $image_original_uri {
 	~^<%= path %>/cache/thumbnails/(?<image_uri>.+)$ $image_uri;
 }
+	<% } %>
+	<% if (typeof videoThumbnails === 'string') { %>
+
+map $uri $video_original_uri {
+	~^<%= path %>/cache/video-thumbnails/(?<video_uri>.+)\.jpg$ $video_uri;
+}
+	<% } %>
 <% } %>
 <% if (subtitlesConvertSrtToVtt) { %>
 

@@ -73,6 +73,10 @@ try {
 		config.thumbnails = configYaml.thumbnails;
 	}
 
+	if (configYaml.videoThumbnails !== undefined) {
+		config.videoThumbnails = configYaml.videoThumbnails;
+	}
+
 	if (configYaml.lightTheme !== undefined) {
 		config.lightTheme = configYaml.lightTheme;
 	}

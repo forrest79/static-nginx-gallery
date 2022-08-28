@@ -35,6 +35,8 @@ prepare_test "test-thumbnails.yml";
 
 prepare_test "test-thumbnails-cache.yml";
 
+prepare_test "test-video-thumbnails.yml";
+
 prepare_test "test-subtitles.yml";
 
 prepare_test "test-all.yml";

@@ -18,7 +18,7 @@
 		</head>
 		<body<% if (lightTheme) { %> class="light"<% } %>>
 			<div class="content">
-			    <h1><%= title %> <span><xsl:value-of select="$processedUri" /></span></h1>
+				<h1><%= title %> <span><xsl:value-of select="$processedUri" /></span></h1>
 				<xsl:if test="count(list/directory) > 0 or $processedUri != '/'">
 					<div class="directories">
 						<xsl:if test="$processedUri != '/'">
@@ -44,7 +44,7 @@
 							<figure class="galleryItem">
 								<xsl:choose>
 									<xsl:when test="contains(' .mp4 .mkv .avi .wmv .ogv ', concat(' ', translate(substring(., string-length() - 3), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' ')) or contains(' .webm ', concat(' ', translate(substring(., string-length() - 4), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), ' '))">
-										<a href="{.}" class="glightbox" title="{.}" data-type="video" data-title="{.}">
+										<a href="{.}" class="glightbox" title="{.}" data-type="video" data-title="{.}"<% if (typeof videoThumbnails === 'string') { %> style="background-image: url('<%= path %>/cache/video-thumbnails{$processedUri}{.}.jpg');"<% } %>>
 											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
 												<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
 												<path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z" />

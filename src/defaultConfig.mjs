@@ -8,6 +8,7 @@ const defaultConfig = {
 	path: null,
 	port: null,
 	thumbnails: false,
+	videoThumbnails: false,
 	lightTheme: false,
 	title: 'Gallery',
 	favicon: false,
@@ -20,12 +21,12 @@ const defaultConfig = {
 	sslLetsEncrypt: false,
 	httpAuth: false,
 	// can't be rewritten in user configuration
-	imageFilterResizeWidth: 800,
-	imageFilterResizeHeight: 800,
+	thumbnailsResizeWidth: 800,
+	thumbnailsResizeHeight: 800,
 	imageFilterBuffer: '100M',
-	image_filter_jpeg_quality: 85,
-	image_filter_webp_quality: 80,
-	image_filter_sharpen: 50,
+	imageFilterJpegQuality: 85,
+	imageFilterWebpQuality: 80,
+	imageFilterSharpen: 50,
 };
 
 export default defaultConfig;

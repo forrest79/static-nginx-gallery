@@ -21,7 +21,9 @@ Just put your files in the folder and get it instantly in the gallery - no backg
    - show GPS on the Google Maps
    - view photo sphere panoramas (via [Photo Sphere Viewer](https://photo-sphere-viewer.js.org/))
    - an optional automatic image thumbnails with an optional cache
-- videos (via [Plyr](https://plyr.io/)) *with optional auto conversion SRT subtitles to supported VTT*
+- videos (via [Plyr](https://plyr.io/))
+   - an optional thumbnail generation (`ffmpeg` installed on system needed)
+   - with optional auto conversion SRT subtitles to supported VTT
 - other files (just view and download)
 - sharing link to the gallery
 - sharing on social networks (via [shareon](https://shareon.js.org/))
@@ -32,13 +34,15 @@ Just put your files in the folder and get it instantly in the gallery - no backg
 
 ### What do I need?
 
-[nginx](https://www.nginx.com/) to run gallery and [node.js](https://nodejs.org) version 16 or greater with npm to generate configuration. Nothing more, really. This tool generates nginx configuration and one XSLT, JS and CSS file to control whole gallery and all supported tools.
+[nginx](https://www.nginx.com/) to run gallery and [node.js](https://nodejs.org) version 16 or greater with `npm` to generate configuration. If you want to generate also video thumbnails, `ffmpeg` must be installed on your system. Nothing more, really. This tool generates nginx configuration and one XSLT, JS and CSS file to control whole gallery and all supported tools.
 
 You need nginx with the [XSTL module](http://nginx.org/en/docs/http/ngx_http_xslt_module.html). In Debian/Ubuntu world this is the `nginx-full` package.
 
 If you want an automatic image thumbnail (with a cache) you need also the [images filter module](http://nginx.org/en/docs/http/ngx_http_image_filter_module.html). Still the `nginx-full` in Debian/Ubuntu.
 
 For an automatic SRT to VTT conversion you need the [lua module](https://github.com/openresty/lua-nginx-module). This is the `nginx-extras` package.
+
+And for video thumbnails generation you also need the `lua module` and [ffmpeg](https://ffmpeg.org/) installed on your system and binaries must be set in `PATH` (you can run `ffmpeg` command from everywhere). Thumbnail generation was tested on `ffmpeg` version `4.3.0`.
 
 > This configuration generator was tested on the linux only.
 
@@ -67,6 +71,7 @@ There are some more optional options:
 path: null # /path/
 port: null # null = use default - 80 for HTTP, 443 for HTTPS
 thumbnails: false # bool - yes/no or string with cache directory
+videoThumbnails: false # or string with cache directory
 lightTheme: false # bool - yes/no
 title: 'Gallery' # <h1> and <title>
 favicon: false # or string with a path to custom favicon (in PNG format)
@@ -79,6 +84,7 @@ httpAuth: false # or string with htpasswd auth file
 - `path` - by default, gallery is accessible at serverName host `/`, this can change the default path to `path` (for example `http://gallery.test/some-path/` it you set `serverName: gallery.test` and `path: 'some-path'`) 
 - `port` - `null` is used for default value - `80` for HTTP or `443` for HTTPS version, but you can use your own, if you need
 - `thumbnails` - by default, thumbnail images in the list are original images, this could cause to download a lot of data for one page. When you set this to `true`, nginx will generate for all images smaller thumbnails on the fly, so data usage will be less, but more processor time will be used to generate thumbnails on every request. The last option is to provide a `string` with a directory, where this thumbnails will be cached, so every thumbnail will be generated just once. This has just one disadvantage: when a thumbnail is generated, it's never regenerated, even if the original image is changed. You must remove cached thumbnail to regenerate it. *`images` module is needed in nginx for this*
+- `videoThumbnails` - by default, videos has no thumbnail images. When you set directory for cache, nginx will generate via `ffmpeg` thumbnails and these thumbnails will be cached, so every thumbnail will be generated just once. This has the same disadvantage as image thumbnails: when a thumbnail is generated, it's never regenerated, even if the original video is changed. You must remove cached thumbnail to regenerate it. *`lua` module is needed in nginx for this and `ffmpeg` must be installed on the system*
 - `lightTheme` - gallery is by default in dark theme, set this to `true` and light theme will be used
 - `title` - can change default `<title>` and `<h1>` which is `Gallery`
 - `favicon` - can change default favicon file, use path to a PNG image
