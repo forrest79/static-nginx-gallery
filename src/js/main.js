@@ -207,12 +207,21 @@ lightbox.on('open', () => {
 	copyButton.addEventListener('click', (event) => {
 		event.stopPropagation();
 
-		navigator.clipboard.writeText(window.location.toString()).then(() => {
-			copyButton.innerHTML = copySvgDone;
-			setTimeout(() => {
-				copyButton.innerHTML = copySvg;
-			}, 2000);
-		});
+		navigator.clipboard.writeText(window.location.toString())
+			.then(() => {
+				copyButton.innerHTML = copySvgDone;
+				setTimeout(() => {
+					copyButton.innerHTML = copySvg;
+				}, 2000);
+			})
+			.catch((err) => {
+				tippy(copyButton, {
+						trigger: 'manual',
+						appendTo: document.body,
+						zIndex: 999999,
+						content: err,
+				}).show();
+			});
 	});
 
 	exifButton = document.getElementById('sng-exif');
