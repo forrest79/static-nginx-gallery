@@ -8,7 +8,7 @@ import rollupNodeResolve from '@rollup/plugin-node-resolve';
 import rollupReplace from '@rollup/plugin-replace';
 import rollupCommonJS from '@rollup/plugin-commonjs';
 import { babel } from '@rollup/plugin-babel';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import sass from 'node-sass';
 import { fileURLToPath } from 'url';
 import * as path from 'path';
