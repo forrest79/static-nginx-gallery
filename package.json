@@ -1,28 +1,28 @@
 {
-  "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.23",
-    "@babel/preset-env": "^7.23",
-    "@rollup/plugin-babel": "^6.0",
-    "@rollup/plugin-commonjs": "^25.0",
-    "@rollup/plugin-node-resolve": "^15.2",
-    "@rollup/plugin-replace": "^5.0",
-    "@rollup/plugin-terser": "^0.4",
-    "commander": "^11.0",
-    "core-js": "^3.33",
-    "ejs": "^3.1",
-    "eslint": "^8.51",
-    "eslint-config-airbnb-base": "^15.0",
-    "exifr": "^7.1",
-    "glightbox": "^3.2",
-    "node-sass": "^9.0",
-    "photo-sphere-viewer": "^4.8",
-    "rollup": "^4.0",
-    "shareon": "^2.3",
-    "tippy.js": "^6.3",
-    "yaml": "^2.3"
-  },
-  "scripts": {
-    "build": "node ./src/cli.mjs",
-    "eslint": "npx eslint ./src --ext js,mjs"
-  }
+	"dependencies": {
+		"@babel/plugin-transform-runtime": "^7.23",
+		"@babel/preset-env": "^7.23",
+		"@rollup/plugin-babel": "^6.0",
+		"@rollup/plugin-commonjs": "^25.0",
+		"@rollup/plugin-node-resolve": "^15.2",
+		"@rollup/plugin-replace": "^5.0",
+		"@rollup/plugin-terser": "^0.4",
+		"commander": "^11.0",
+		"core-js": "^3.33",
+		"ejs": "^3.1",
+		"eslint": "^8.51",
+		"eslint-config-airbnb-base": "^15.0",
+		"exifr": "^7.1",
+		"glightbox": "^3.2",
+		"node-sass": "^9.0",
+		"photo-sphere-viewer": "^4.8",
+		"rollup": "^4.0",
+		"shareon": "^2.3",
+		"tippy.js": "^6.3",
+		"yaml": "^2.3"
+	},
+	"scripts": {
+		"build": "node ./src/cli.mjs",
+		"eslint": "npx eslint ./src --ext js,mjs"
+	}
 }
